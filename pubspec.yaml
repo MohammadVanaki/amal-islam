@@ -1,0 +1,75 @@
+name: islam
+description: "مكتبة أمل الاسلام"
+publish_to: "none"
+version: 2.0.2+16
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # --- State Management ---
+  flutter_riverpod: ^2.5.1
+
+  # --- Networking & Download Manager ---
+  dio: ^5.11.1
+  path_provider: ^2.1.2
+  path: ^1.9.0
+  archive: ^4.5.2
+
+  # --- Local Storage & Database ---
+  sqflite: ^2.3.3+1
+  shared_preferences: ^2.2.3
+
+  # --- Reader Engines (PDF & UI) ---
+  syncfusion_flutter_pdfviewer: ^35.1.42
+  flutter_widget_from_html: ^0.15.3
+  wakelock_plus: ^1.2.8
+
+  # --- UI & Animations ---
+  google_fonts: ^6.2.1
+  gap: ^3.0.1
+  zoom_tap_animation: ^1.1.0
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  share_plus: ^13.3.1
+  scrollable_positioned_list: ^0.3.8
+  url_launcher: ^6.3.3
+  package_info_plus: ^10.2.2
+  firebase_core: ^5.1.0
+  firebase_auth: ^7.0.1
+  cloud_firestore: ^7.1.0
+  firebase_messaging: ^17.0.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/image/appIcon.png"
+  min_sdk_android: 21
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/image/
+    - assets/fonts/
+
+  fonts:
+    - family: IBMPlexSansArabic
+      fonts:
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
+          weight: 700

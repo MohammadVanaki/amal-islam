@@ -1,0 +1,87 @@
+{
+  "project_info": {
+    "project_number": "662923885492",
+    "project_id": "dijlahapps2",
+    "storage_bucket": "dijlahapps2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662923885492:android:c49802b4c0395e810690e1",
+        "android_client_info": {
+          "package_name": "com.dijlah.alamalislam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXHquz0l7CDt_zx5qsrdMDQ1bxyzF1o0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662923885492:android:be660be0e91106be0690e1",
+        "android_client_info": {
+          "package_name": "com.dijlah.alseraj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXHquz0l7CDt_zx5qsrdMDQ1bxyzF1o0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662923885492:android:4418522649997cd00690e1",
+        "android_client_info": {
+          "package_name": "com.dijlah.ammar_alhakeem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXHquz0l7CDt_zx5qsrdMDQ1bxyzF1o0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662923885492:android:bcca46d86742dd4b0690e1",
+        "android_client_info": {
+          "package_name": "com.dijlah.haditv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXHquz0l7CDt_zx5qsrdMDQ1bxyzF1o0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+

@@ -5,7 +5,11 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       groups:
-        - apple_credentials # نام گروه متغیرهایی که موقع Save کردن API Key ساختی
+        - apple_credentials # مطمئن شوید این گروه در Environment variables کدمجیک با همین نام وجود دارد
+      vars:
+        BUNDLE_ID: "com.dijlah.alamalislam"
+        XCODE_PROJECT: "ios/Runner.xcodeproj"
+        XCODE_SCHEME: "Runner"
       flutter: 3.47.0
       xcode: latest
     scripts:
@@ -14,17 +18,20 @@ workflows:
           flutter packages pub get
       - name: Set up code signing
         script: |
-          # کدمجیک گواهی توزیع و پروفایل اپ‌استور را به صورت خودکار مچ می‌کند
+          # واکشی گواهی توزیع اپ‌استور و پروفایل مربوط به این اپ
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+          # اعمال پروفایل‌های دانلود شده روی پروژه Xcode
           xcode-project use-profiles
       - name: Force iOS 15.0 Deployment Target
         script: |
-          # اطمینان از تنظیم تارگت ۱۵.۰ در فایل اصلی پروژه برای سازگاری با Swift Packageها
           find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} \;
           find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 12.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} \;
           find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} \;
       - name: Flutter build IPA
         script: |
-          # ساخت رسمی فایل IPA بدون تداخل کوکوآپادز
-          flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa

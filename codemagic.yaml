@@ -1,0 +1,40 @@
+workflows:
+  ios-release:
+    name: iOS Release IPA
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - apple_credentials # نام گروه متغیرهایی که موقع Save کردن API Key ساختی
+      flutter: 3.47.0
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter packages pub get
+      - name: Install CocoaPods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Set up code signing
+        script: |
+          # کدمجیک گواهی توزیع و پروفایل اپ‌استور را به صورت خودکار مچ می‌کند
+          xcode-project use-profiles
+      - name: Force iOS 15.0 Deployment Target
+        script: |
+          # ۱. اطمینان از تنظیم تارگت ۱۵.۰ در فایل اصلی پروژه برای حل خطای فایربیس و SPM
+          find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} \;
+          find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 12.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} \;
+          find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} \;
+
+          # ۲. اطمینان از نسخه در Podfile
+          sed -i '' "s/platform :ios, '13.0'/platform :ios, '15.0'/g" ios/Podfile
+          sed -i '' "s/platform :ios, '12.0'/platform :ios, '15.0'/g" ios/Podfile
+          sed -i '' "s/platform :ios, '11.0'/platform :ios, '15.0'/g" ios/Podfile
+      - name: Flutter build IPA
+        script: |
+          # ساخت رسمی فایل IPA با پلیست امضاشده کدمجیک
+          flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+

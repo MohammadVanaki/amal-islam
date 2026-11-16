@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -14,16 +16,6 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    await NotificationService.instance.initialize();
-  } catch (e) {
-    debugPrint('Firebase initialization error: $e');
-  }
-
   // Global Edge-to-Edge System Bar Configuration with Black (Dark) Status Bar Icons
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
@@ -38,7 +30,32 @@ void main() async {
     ),
   );
 
+  // 1. Immediately launch UI so the app and splash screen appear instantly without blocking
   runApp(const ProviderScope(child: AmalIslamApp()));
+
+  // 2. Initialize Firebase and Notification services asynchronously in the background
+  unawaited(_initializeFirebaseAndNotifications());
+}
+
+Future<void> _initializeFirebaseAndNotifications() async {
+  try {
+    final options = DefaultFirebaseOptions.currentPlatform;
+    if (options != null) {
+      await Firebase.initializeApp(options: options);
+
+      try {
+        FirebaseMessaging.onBackgroundMessage(
+          firebaseMessagingBackgroundHandler,
+        );
+      } catch (e) {
+        debugPrint('FCM background message registration error: $e');
+      }
+
+      await NotificationService.instance.initialize();
+    }
+  } catch (e, stackTrace) {
+    debugPrint('Firebase initialization error: $e\n$stackTrace');
+  }
 }
 
 class AmalIslamApp extends ConsumerWidget {

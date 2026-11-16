@@ -40,6 +40,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPalette = ref.watch(appPaletteProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
     final totalBytesAsync = ref.watch(totalStorageBytesProvider);
     final packageInfoAsync = ref.watch(packageInfoProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -195,7 +196,117 @@ class SettingsScreen extends ConsumerWidget {
           _buildUserAccountCard(context, ref, currentPalette, isDark),
           const Gap(16),
 
-          // 2. Theme Colors Card ("ألوان المظهر" - دقیقاً مطابق اسکرین‌شات کاربر)
+          // 2. Theme Mode Card (تلقائي / فاتح / داكن)
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: currentPalette.color.withValues(alpha: 0.05),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: currentPalette.color.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.brightness_6_rounded,
+                        color: currentPalette.color,
+                        size: 22,
+                      ),
+                    ),
+                    const Gap(12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'وضع المظهر',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: isDark
+                                  ? Colors.white
+                                  : const Color(0xFF151817),
+                            ),
+                          ),
+                          const Gap(2),
+                          Text(
+                            'تلقائي حسب نظام الجهاز، أو تثبيت المظهر الفاتح أو الداكن',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w500,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : const Color(0xFF6B7280),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(16),
+
+                // 3 Options Row: تلقائي (النظام) | فاتح | داكن
+                Row(
+                  children: [
+                    _buildThemeModeOption(
+                      ref: ref,
+                      mode: ThemeMode.system,
+                      title: 'تلقائي',
+                      subtitle: 'حسب النظام',
+                      icon: Icons.brightness_auto_rounded,
+                      isSelected: currentThemeMode == ThemeMode.system,
+                      currentPalette: currentPalette,
+                      isDark: isDark,
+                    ),
+                    const Gap(10),
+                    _buildThemeModeOption(
+                      ref: ref,
+                      mode: ThemeMode.light,
+                      title: 'فاتح',
+                      subtitle: 'نهاري',
+                      icon: Icons.light_mode_rounded,
+                      isSelected: currentThemeMode == ThemeMode.light,
+                      currentPalette: currentPalette,
+                      isDark: isDark,
+                    ),
+                    const Gap(10),
+                    _buildThemeModeOption(
+                      ref: ref,
+                      mode: ThemeMode.dark,
+                      title: 'داكن',
+                      subtitle: 'ليلي',
+                      icon: Icons.dark_mode_rounded,
+                      isSelected: currentThemeMode == ThemeMode.dark,
+                      currentPalette: currentPalette,
+                      isDark: isDark,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Gap(16),
+
+          // 3. Theme Colors Card ("ألوان المظهر" - دقیقاً مطابق اسکرین‌شات کاربر)
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -737,6 +848,98 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
+    );
+  }
+
+  Widget _buildThemeModeOption({
+    required WidgetRef ref,
+    required ThemeMode mode,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required bool isSelected,
+    required AppPalette currentPalette,
+    required bool isDark,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          ref.read(themeModeProvider.notifier).setThemeMode(mode);
+        },
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? (isDark
+                    ? currentPalette.color.withValues(alpha: 0.28)
+                    : currentPalette.color.withValues(alpha: 0.12))
+                : (isDark
+                    ? AppColors.surfaceDark
+                    : const Color(0xFFF6F8F7)),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected
+                  ? currentPalette.color
+                  : (isDark ? AppColors.borderDark : const Color(0xFFE5E7EB)),
+              width: isSelected ? 1.8 : 1,
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: currentPalette.color.withValues(alpha: 0.18),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 22,
+                color: isSelected
+                    ? (isDark
+                        ? currentPalette.primaryLight
+                        : currentPalette.color)
+                    : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+              ),
+              const Gap(6),
+              Text(
+                title,
+                style: GoogleFonts.ibmPlexSansArabic(
+                  fontSize: 12.5,
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                  color: isSelected
+                      ? (isDark ? Colors.white : currentPalette.color)
+                      : (isDark
+                          ? Colors.grey.shade300
+                          : const Color(0xFF374151)),
+                ),
+              ),
+              const Gap(2),
+              Text(
+                subtitle,
+                style: GoogleFonts.ibmPlexSansArabic(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  color: isSelected
+                      ? (isDark
+                          ? currentPalette.primaryLight
+                          : currentPalette.color)
+                      : (isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

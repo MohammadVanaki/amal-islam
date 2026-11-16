@@ -16,7 +16,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Global Edge-to-Edge System Bar Configuration with Black (Dark) Status Bar Icons
+  // Global Edge-to-Edge System Bar Configuration with Black (Dark) Status Bar Icons ajab
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

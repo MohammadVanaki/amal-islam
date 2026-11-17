@@ -23,8 +23,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAXHquz0l7CDt_zx5qsrdMDQ1bxyzF1o0s',
-    appId: '1:662923885492:ios:c49802b4c0395e810690e1',
+    apiKey: 'AIzaSyDjt6pg0YStnht0h2AoPjONSy45WKtCom8',
+    appId: '1:662923885492:ios:e1d240ce636b43e90690e1',
     messagingSenderId: '662923885492',
     projectId: 'dijlahapps2',
     storageBucket: 'dijlahapps2.firebasestorage.app',

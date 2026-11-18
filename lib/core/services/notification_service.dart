@@ -85,29 +85,27 @@ class NotificationService {
       }
     } catch (_) {}
 
-    // 6. On iOS, verify APNs token BEFORE attempting subscribeToTopic or getToken!
-    // Firebase iOS SDK will throw an unhandled exception if getToken/subscribeToTopic
-    // are called before the APNs device token is received from Apple.
+    // 6. On iOS, wait for APNs device token from Apple (retry up to 10 seconds)
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      try {
-        final apnsToken = await _fcm.getAPNSToken();
-        if (apnsToken == null) {
-          developer.log(
-            'APNs token is not yet ready on iOS. Deferring FCM token & topic subscription.',
-            name: 'NotificationService',
-          );
-          _fcm.onTokenRefresh.listen((token) {
-            _fcmToken = token;
-            _subscribeTopicsSafely();
-          });
-          return;
-        }
-      } catch (e) {
+      String? apnsToken;
+      for (int i = 0; i < 10; i++) {
+        try {
+          apnsToken = await _fcm.getAPNSToken();
+          if (apnsToken != null) break;
+        } catch (_) {}
+        await Future.delayed(const Duration(seconds: 1));
+      }
+
+      if (apnsToken == null) {
         developer.log(
-          'Error checking APNs token: $e',
+          'APNs token is not ready yet. FCM will retry upon token refresh.',
           name: 'NotificationService',
         );
-        return;
+      } else {
+        developer.log(
+          'APNs token received successfully: $apnsToken',
+          name: 'NotificationService',
+        );
       }
     }
 
@@ -121,20 +119,22 @@ class NotificationService {
         'FCM Device Token: $_fcmToken',
         name: 'NotificationService',
       );
-
-      _fcm.onTokenRefresh.listen((token) {
-        _fcmToken = token;
-        developer.log(
-          'FCM Token refreshed: $token',
-          name: 'NotificationService',
-        );
-      });
     } catch (e) {
       developer.log(
         'Error fetching FCM token: $e',
         name: 'NotificationService',
       );
     }
+
+    // Always listen to token refresh and resubscribe
+    _fcm.onTokenRefresh.listen((token) {
+      _fcmToken = token;
+      developer.log(
+        'FCM Token refreshed: $token',
+        name: 'NotificationService',
+      );
+      _subscribeTopicsSafely();
+    });
   }
 
   Future<void> _subscribeTopicsSafely() async {

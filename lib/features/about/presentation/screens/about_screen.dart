@@ -16,7 +16,7 @@ class AboutScreen extends ConsumerStatefulWidget {
 }
 
 class _AboutScreenState extends ConsumerState<AboutScreen> {
-  int _selectedTabIndex = 0; // 0: حول التطبيق, 1: السيرة الذاتية
+  int _selectedTabIndex = 0; // 0: السيرة الذاتية (افتراضي), 1: حول التطبيق
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +25,14 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
 
     return Scaffold(
       appBar: MainTabAppBar(
-        title: _selectedTabIndex == 0 ? 'حول التطبيق' : 'السيرة الذاتية',
+        title: _selectedTabIndex == 0 ? 'السيرة الذاتية' : 'حول التطبيق',
         icon: _selectedTabIndex == 0
-            ? Icons.info_outline_rounded
-            : Icons.history_edu_rounded,
+            ? Icons.history_edu_rounded
+            : Icons.info_outline_rounded,
       ),
       body: Column(
         children: [
-          // Elegant Tab Selector
+          // Elegant Tab Selector (السيرة الذاتية على اليمين وافتراضية)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 8),
             child: Container(
@@ -53,8 +53,8 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                 children: [
                   Expanded(
                     child: _buildTabButton(
-                      title: 'حول التطبيق',
-                      icon: Icons.info_outline_rounded,
+                      title: 'السيرة الذاتية',
+                      icon: Icons.history_edu_rounded,
                       index: 0,
                       currentPalette: currentPalette,
                       isDark: isDark,
@@ -63,8 +63,8 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                   const Gap(6),
                   Expanded(
                     child: _buildTabButton(
-                      title: 'السيرة الذاتية',
-                      icon: Icons.history_edu_rounded,
+                      title: 'حول التطبيق',
+                      icon: Icons.info_outline_rounded,
                       index: 1,
                       currentPalette: currentPalette,
                       isDark: isDark,
@@ -80,8 +80,8 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 280),
               child: _selectedTabIndex == 0
-                  ? _buildAboutAppTab(context, currentPalette, isDark)
-                  : _buildBiographyTab(context, currentPalette, isDark),
+                  ? _buildBiographyTab(context, currentPalette, isDark)
+                  : _buildAboutAppTab(context, currentPalette, isDark),
             ),
           ),
         ],
@@ -217,7 +217,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    _selectedTabIndex = 1;
+                    _selectedTabIndex = 0;
                   });
                 },
                 child: Container(
@@ -304,6 +304,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               Text(
                 'تعد مكتبة «أمل الإسلام» نافذة معرفية وتربوية تهدف إلى تعزيز الثقافة الأسرية المستمدة من الهدي القرآني ومنهج أهل البيت عليهم السلام.\n\n'
                 'تسعى هذه السلسلة التربوية إلى معالجة الإشكاليات السلوكية والاجتماعية التي تواجه الأسرة المعاصرة، وتقديم حلول علمية وعملية لبناء جيل مؤمن وواعٍ.',
+                textAlign: TextAlign.justify,
                 style: GoogleFonts.ibmPlexSansArabic(
                   fontSize: 13.5,
                   height: 1.8,
@@ -769,6 +770,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
           const Gap(12),
           Text(
             content,
+            textAlign: TextAlign.justify,
             style: GoogleFonts.ibmPlexSansArabic(
               fontSize: 13.5,
               height: 1.85,
@@ -897,6 +899,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                       Expanded(
                         child: Text(
                           item,
+                          textAlign: TextAlign.justify,
                           style: GoogleFonts.ibmPlexSansArabic(
                             fontSize: 13,
                             height: 1.6,

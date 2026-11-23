@@ -74,10 +74,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('لا توجد كتب محمّلة حالياً'), findsOneWidget);
 
-    // 5. Switch to حول التطبيق (index 3)
+    // 5. Switch to حول التطبيق (index 3 - opens السيرة الذاتية by default)
     await tester.tap(find.text('حول التطبيق'));
     await tester.pumpAndSettle();
-    expect(find.text('سلسلة إضاءات إسلامية في التربية الأسرية'), findsOneWidget);
+    expect(find.text('الكاتبة أمل الموسوي'), findsOneWidget);
 
     // 6. Switch to الاعدادات (index 4)
     await tester.tap(find.text('الاعدادات'));
